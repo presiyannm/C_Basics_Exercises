@@ -8,21 +8,21 @@ static void exercise_even_odd(void);
 static void exercise_base_two(void);
 static void print_main_menu(void);
 
-static double calculate_area_square(double side) {
-    return side * side;
+static double calculate_area_square(const double *side) {
+    return (*side) * (*side);
 }
 
-static double calculate_area_rectangle(double length, double breadth) {
-    return length * breadth;
+static double calculate_area_rectangle(const double *length, const double *breadth) {
+    return (*length) * (*breadth);
 }
 
-static double calculate_area_triangle(double base, double height) {
-    return (base * height) / 2.0;
+static double calculate_area_triangle(const double *base, const double *height) {
+    return ((*base) * (*height)) / 2.0;
 }
 
-static double calculate_area_circle(double radius) {
+static double calculate_area_circle(const double *radius) {
     const double PI = 3.141592653589793;
-    return PI * radius * radius;
+    return PI * (*radius) * (*radius);
 }
 
 static void exercise_area_calculator(void) {
@@ -51,7 +51,7 @@ static void exercise_area_calculator(void) {
                 printf("Invalid side\n");
                 return;
             }
-            printf("Square area: %.4f\n", calculate_area_square(side));
+            printf("Square area: %.4f\n", calculate_area_square(&side));
             break;
         }
         case 2: {
@@ -61,7 +61,7 @@ static void exercise_area_calculator(void) {
                 printf("Invalid rectangle dimensions\n");
                 return;
             }
-            printf("Rectangle area: %.4f\n", calculate_area_rectangle(l, b));
+            printf("Rectangle area: %.4f\n", calculate_area_rectangle(&l, &b));
             break;
         }
         case 3: {
@@ -71,7 +71,7 @@ static void exercise_area_calculator(void) {
                 printf("Invalid triangle dimensions\n");
                 return;
             }
-            printf("Triangle area: %.4f\n", calculate_area_triangle(base, height));
+            printf("Triangle area: %.4f\n", calculate_area_triangle(&base, &height));
             break;
         }
         case 4: {
@@ -81,7 +81,7 @@ static void exercise_area_calculator(void) {
                 printf("Invalid radius\n");
                 return;
             }
-            printf("Circle area: %.4f\n", calculate_area_circle(radius));
+            printf("Circle area: %.4f\n", calculate_area_circle(&radius));
             break;
         }
         default:
@@ -92,39 +92,43 @@ static void exercise_area_calculator(void) {
 
 static void exercise_swap_numbers(void) {
     int x = 5, y = 10;
+    int *px = &x;
+    int *py = &y;
     printf("\n--- Swap Numbers ---\n");
-    printf("Before switching: x = %d, y = %d\n", x, y);
-    int temp = x;
-    x = y;
-    y = temp;
-    printf("After switching: x = %d, y = %d\n", x, y);
+    printf("Before switching: x = %d, y = %d\n", *px, *py);
+    int temp = *px;
+    *px = *py;
+    *py = temp;
+    printf("After switching: x = %d, y = %d\n", *px, *py);
 }
 
-static bool is_even(int num) {
-    return (num % 2) == 0;
+static bool is_even(const int *num) {
+    return ((*num) % 2) == 0;
 }
 
 static void exercise_even_odd(void) {
     int number;
+    int *p_number = &number;
     printf("\n--- Even/Odd Checker ---\n");
     printf("Enter a number: ");
-    if (scanf("%d", &number) != 1) {
+    if (scanf("%d", p_number) != 1) {
         printf("Invalid input\n");
         return;
     }
-    printf("The number %d is %s.\n", number, is_even(number) ? "even" : "odd");
+    printf("The number %d is %s.\n", *p_number, is_even(p_number) ? "even" : "odd");
 }
 
 static void exercise_base_two(void) {
     int number;
+    int *p_number = &number;
     printf("\n--- Base-2 Converter ---\n");
     printf("Enter a non-negative integer: ");
-    if (scanf("%d", &number) != 1 || number < 0) {
+    if (scanf("%d", p_number) != 1 || *p_number < 0) {
         printf("Invalid input\n");
         return;
     }
 
-    if (number == 0) {
+    if (*p_number == 0) {
         printf("The number in base 2 is: 0\n");
         return;
     }
@@ -132,14 +136,14 @@ static void exercise_base_two(void) {
     int binary[32];
     int i = 0;
 
-    while (number > 0 && i < 32) {
-        binary[i++] = number % 2;
-        number /= 2;
+    while (*p_number > 0 && i < 32) {
+        binary[i++] = (*p_number) % 2;
+        *p_number /= 2;
     }
 
     printf("The number in base 2 is: ");
-    for (int j = i - 1; j >= 0; j--) {
-        printf("%d", binary[j]);
+    for (int *p = &binary[i - 1]; p >= binary; p--) {
+        printf("%d", *p);
     }
     printf("\n");
 }
